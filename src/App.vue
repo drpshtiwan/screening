@@ -1,5 +1,7 @@
 <script setup>
 import ScreeningForm from  './components/ScreeningForm.vue';
+const year = new Date();
+
 </script>
 
 <template>
@@ -24,8 +26,9 @@ import ScreeningForm from  './components/ScreeningForm.vue';
 
 
 
-    <hr class="bg-secondary">
-    <div class="text-center px-3 ">
+    <hr class="bg-secondary mt-5  " />
+    <div class="d-flex text-center text-lg-start flex-column flex-lg-row justify-content-between px-3 mt-2 mb-4">
+      <p>©{{year.getFullYear()}} وەزارەتی تەندروستی حوکمەتی هەرێمی کوردستان, گشت مافەکانی پارێزراوە. </p>
       <p>Developed by <a href="https://github.com/drpshtiwan" target="_blank">Dr. Pshtiwan</a></p>
     </div>
 
