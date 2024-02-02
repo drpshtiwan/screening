@@ -57,7 +57,7 @@
     </div>
     <hr class="my-4">
     <div class="mb-4">
-      <h5>هیچ کام لەم شێرپەنجانە لە خیزانەکەت هەیە؟</h5>
+      <h5>هیچ کام لەم شێرپەنجانە لە خێزانەکەت هەیە؟</h5>
       <p class="text-black-50 mb-2">کەسی یەکەمی خێزان کە دایک، باوک، برا و خوشک دەگرێتەوە.</p>
       <div class="px-3">
         <template v-for="cancer in cancers">
@@ -157,7 +157,7 @@ const NO_TESTS_REQUIRED = 'no-tests-required';
 const RIZGARY = 'rizgary';
 const BREAST_CENTER = 'breast-center';
 const SHAR = 'shar';
-const AZADI = 'shar';
+const AZADI = 'azadi';
 
 //options
 const MALE = 'male';
@@ -328,13 +328,13 @@ function setSuggestedHospitals() {
   switch (city.value) {
     case HAWLER:
       setHawlerHospitals()
-      return;
+      break;
     case SULAYMANI:
       suggestedHospitals.value = [SHAR];
-      return;
+      break;
     case DUHOK:
       suggestedHospitals.value = [AZADI];
-      return;
+      break;
   }
 }
 
