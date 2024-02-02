@@ -3,7 +3,7 @@
   <p class="text-secondary ">ئەم فۆڕمەی خوارەوە پڕبکەوە بۆ زانینی ئەو پشکنینە پێشوەختانەی پێویستە ئەنجامی بدەیت بۆ
     شێرپەنجە باوەکان.</p>
   <hr class="my-4">
-  <div class="mb-5">
+  <div class="mb-3">
     <div class="row">
       <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-3">
         <label for="cityInput" class="form-label text-black h6">شوێنی نیشتەجێبوون</label>
@@ -40,7 +40,7 @@
         </select>
       </div>
     </div>
-    <hr class="my-4">
+    <hr class="mb-4">
     <div>
       <h5 class="mb-2">هیچ کام لەم شێرپەنجانەت هەیە؟</h5>
       <div class="px-3">
@@ -204,7 +204,11 @@ const investigations = [
     type: CERVICAL
   },
   {name: 'پشکنینی پیسایی (FIT) هەموو ساڵ جارێک بۆ شێرپەنجەی کۆلۆن.', value: FIT, type: COLON},
-  {name: 'ئەنجامدانی نازوری کۆڵۆن هەموو ١٠ ساڵ جارێک بۆ شێرپەنجەی کۆلۆن.', value: COLONOSCOPY_EVRY_TEN_YEAR, type: COLON},
+  {
+    name: 'ئەنجامدانی نازوری کۆڵۆن هەموو ١٠ ساڵ جارێک بۆ شێرپەنجەی کۆلۆن.',
+    value: COLONOSCOPY_EVRY_TEN_YEAR,
+    type: COLON
+  },
   {
     name: 'ئەنجامدانی نازوری کۆڵۆن هەموو ٥ ساڵ جارێک بۆ شێرپەنجەی کۆلۆن.',
     value: COLONOSCOPY_EVRY_FIVE_YEAR,
@@ -341,13 +345,14 @@ function setSuggestedHospitals() {
 function setHawlerHospitals() {
   suggestedHospitals.value = [RIZGARY];
 
-  const hasBreastTests = suggestedInvestigations.value.filter((item) => [
-        SELF_EXAMINATION,
-        CLINICAL_EXAMINATION,
-        MAMMOGRAPHY_EVERY_TOW_YEAR,
-        MAMMOGRAPHY_ANNUALLY
-      ].includes(item)
-  ).length > 0;
+  const hasBreastTests = suggestedInvestigations.value
+      .filter((item) => [
+            SELF_EXAMINATION,
+            CLINICAL_EXAMINATION,
+            MAMMOGRAPHY_EVERY_TOW_YEAR,
+            MAMMOGRAPHY_ANNUALLY
+          ].includes(item)
+      ).length > 0;
 
   if (hasBreastTests) {
     suggestedHospitals.value = [...suggestedHospitals.value, BREAST_CENTER];
