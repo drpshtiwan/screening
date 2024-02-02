@@ -98,37 +98,59 @@
 <script setup>
 import {ref} from 'vue';
 import collect from 'collect.js';
+// Cities
+const HAWLER = 'hawler';
+const SULAYMANI = 'sulaymani';
+const DUHOK = 'duhok';
+
+// Cancers
+const BREAST = 'breast';
+const LUNG = 'lung';
+const PROSTATE = 'prostate';
+const CERVICAL = 'cervical';
+const COLON = 'colon';
+const OTHERS = 'others';
+const ALL = 'all';
+
+// Investigations
+const SELF_EXAMINATION = 'self-examination';
+const CLINICAL_EXAMINATION = 'clinical-examination';
+const MAMMOGRAPHY_EVERY_TOW_YEAR = 'mammography-every-2-year';
+const MAMMOGRAPHY_ANNUALLY = 'mammography-annually';
+const CHEST_XRAY = 'c-xray';
+const PSA_OR_DRE = 'psa';
+
 
 const cities = [
-  {name: 'هەولێر', value: 'hawler'},
-  {name: 'سلێمانی', value: 'sulaymani'},
-  {name: 'دهۆک', value: 'duhok'},
-  {name: 'هەڵەبجە', value: 'sulaymani'},
+  {name: 'هەولێر', value: HAWLER},
+  {name: 'سلێمانی', value: SULAYMANI},
+  {name: 'دهۆک', value: DUHOK},
+  {name: 'هەڵەبجە', value: SULAYMANI},
 ]
 
 const cancers = [
-  {name: 'شێرپەنجەی مەمک', value: 'breast'},
-  {name: 'شێرپەنجەی سنگ', value: 'lung'},
-  {name: 'شێرپەنجەی پڕۆستات', value: 'prostate'},
-  {name: 'شێرپەنجەی ملی منداڵدان', value: 'cervical'},
-  {name: 'شێرپەنجەی کۆلۆن', value: 'colon'},
-  {name: 'شێرپەنجەی تر', value: 'others'},
+  {name: 'شێرپەنجەی مەمک', value: BREAST},
+  {name: 'شێرپەنجەی سنگ', value: LUNG},
+  {name: 'شێرپەنجەی پڕۆستات', value: PROSTATE},
+  {name: 'شێرپەنجەی ملی منداڵدان', value: CERVICAL},
+  {name: 'شێرپەنجەی کۆلۆن', value: COLON},
+  {name: 'شێرپەنجەی تر', value: OTHERS},
 ]
 
 const hospitals = [
-  {id: 1, name: 'نەخۆشخانەی ڕزگاری لە هەولێر', city: 'hawler', type: 'all'},
-  {id: 2, name: 'کلینیکی نەخۆشیەکانی مەمک لە نەخۆشخانەی رزگاری', city: 'hawler', type: 'breast'},
-  {id: 3, name: 'سەنتەری مەمک لە هەولێر', city: 'hawler', type: 'breast'},
-  {id: 4, name: 'نەخۆشخانەی شار لە سلێمانی', city: 'sulaymani', type: 'all'},
-  {id: 5, name: 'نەخۆشخانەی ئازادی لە دهۆک', city: 'duhok', type: 'all'},
+  {id: 1, name: 'نەخۆشخانەی ڕزگاری لە هەولێر', city: HAWLER, type: ALL},
+  {id: 2, name: 'کلینیکی نەخۆشیەکانی مەمک لە نەخۆشخانەی رزگاری', city: HAWLER, type: BREAST},
+  {id: 3, name: 'سەنتەری مەمک لە هەولێر', city: HAWLER, type: BREAST},
+  {id: 4, name: 'نەخۆشخانەی شار لە سلێمانی', city: SULAYMANI, type: ALL},
+  {id: 5, name: 'نەخۆشخانەی ئازادی لە دهۆک', city: DUHOK, type: ALL},
 ];
 
 const investigations = [
-  {id: 1, name: 'نەخۆشخانەی ڕزگاری لە هەولێر', value:''},
-  {id: 2, name: 'کلینیکی نەخۆشیەکانی مەمک لە نەخۆشخانەی رزگاری', value:''},
-  {id: 3, name: 'سەنتەری مەمک لە هەولێر', value:''},
-  {id: 4, name: 'نەخۆشخانەی شار لە سلێمانی', value:''},
-  {id: 5, name: 'نەخۆشخانەی ئازادی لە دهۆک', value:''},
+  {name: 'ساڵانە خۆپشکنینی مەمک', value: SELF_EXAMINATION, type: BREAST},
+  {name: 'پشکنینی مامۆگرافی هەموو ٢ ساڵ جارێک', value: MAMMOGRAPHY_EVERY_TOW_YEAR, type: BREAST},
+  {name: 'ساڵانە پشکنینی مەمک لەلایەن پسپۆڕەوە تاکوو تەمەنی ٤٥ ساڵی', value: CLINICAL_EXAMINATION, type: BREAST},
+  {name: 'ساڵانە پشکنینی مامۆگرافی لە تەمەنی ٤٥ بۆ ٦٩ ساڵی', value: MAMMOGRAPHY_ANNUALLY, type: BREAST},
+  {name: 'ساڵانە پشکنینی مامۆگرافی لە تەمەنی ٤٥ بۆ ٦٩ ساڵی', value: MAMMOGRAPHY_ANNUALLY, type: LUNG},
 ];
 
 const city = ref('hawler');
@@ -138,10 +160,10 @@ const maritalStatus = ref('single');
 const smoking = ref(true);
 const fmhx = ref([]);
 const hx = ref([]);
+const cancerTypes = collect(cancers).pluck('value');
 const suggestedInvestigations = ref([]);
 const suggestedHospitals = ref([1, 2]);
 
-const cancerTypes = collect(cancers).pluck('value');
 
 function analyse(e) {
   if (typeof age.value == 'undefined') {
