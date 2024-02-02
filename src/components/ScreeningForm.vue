@@ -11,7 +11,6 @@
           <option v-for="city in cities" :value="city.value">{{ city.name }}</option>
         </select>
       </div>
-
       <div class="col-12 col-md-6 col-lg-4 col-xl-2 mb-3">
         <label for="ageInput" class="form-label text-black h6">تەمەن</label>
         <input v-model="age" required type="number" class="form-control " id="ageInput" placeholder="تەمەن بە ژمارە">
@@ -120,7 +119,6 @@
   </template>
 
 </template>
-
 <script setup>
 import {ref} from 'vue';
 import collect from 'collect.js';
