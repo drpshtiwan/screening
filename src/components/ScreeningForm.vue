@@ -295,7 +295,8 @@ function checkBreastCancer() {
   if (age.value >= 20 && age.value < 45) {
     suggestedInvestigations.value = [...oldInvestigations, SELF_EXAMINATION];
   }
-  if ((age.value >= 45 && age.value <= 69) && hx.value.length === 0 && fmhx.value.length === 0) {
+
+  if (age.value >= 45 && age.value <= 69) {
     suggestedInvestigations.value = [...oldInvestigations, MAMMOGRAPHY_EVERY_TOW_YEAR];
   }
 
@@ -325,13 +326,14 @@ function checkCervicalCancer() {
 
 function checkProstateCancer() {
   const oldInvestigations = suggestedInvestigations.value;
+    if ((age.value >= 55 && age.value <= 72)) {
+    suggestedInvestigations.value = [...oldInvestigations, PSA_OR_DRE];
+  }
+
   if ((age.value >= 45 && age.value <= 72) && (hx.value.length > 0 || fmhx.value.length > 0)) {
     suggestedInvestigations.value = [...oldInvestigations, PSA_OR_DRE];
   }
 
-  if ((age.value >= 55 && age.value <= 72) && (hx.value.length === 0 && fmhx.value.length === 0)) {
-    suggestedInvestigations.value = [...oldInvestigations, PSA_OR_DRE];
-  }
 }
 
 function checkLungCancer() {
@@ -346,7 +348,7 @@ function checkLungCancer() {
 
 function checkColonCancer() {
   const oldInvestigations = suggestedInvestigations.value;
-  if ((age.value >= 45 && age.value <= 75) && hx.value.length === 0 && fmhx.value.length === 0) {
+  if ((age.value >= 45 && age.value <= 75) ) {
     suggestedInvestigations.value = [...oldInvestigations, COLONOSCOPY_EVRY_TEN_YEAR];
   }
 
