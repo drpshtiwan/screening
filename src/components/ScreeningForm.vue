@@ -326,7 +326,7 @@ function checkCervicalCancer() {
 
 function checkProstateCancer() {
   const oldInvestigations = suggestedInvestigations.value;
-    if ((age.value >= 55 && age.value <= 72)) {
+  if ((age.value >= 55 && age.value <= 72)) {
     suggestedInvestigations.value = [...oldInvestigations, PSA_OR_DRE];
   }
 
@@ -341,14 +341,14 @@ function checkLungCancer() {
   const hasFamilyHxOfCancers = fmhx.value
       .filter((item, index) => [LUNG].includes(item))
       .length > 0;
-  if ((age.value >= 55 && age.value <= 70) && smoking.value === SMOKER && (hx.value.length > 0 || hasFamilyHxOfCancers)) {
+  if ((age.value >= 55 && age.value <= 70) && (smoking.value === SMOKER || (hx.value.length > 0 || hasFamilyHxOfCancers))) {
     suggestedInvestigations.value = [...oldInvestigations, CHEST_XRAY];
   }
 }
 
 function checkColonCancer() {
   const oldInvestigations = suggestedInvestigations.value;
-  if ((age.value >= 45 && age.value <= 75) ) {
+  if ((age.value >= 45 && age.value <= 75)) {
     suggestedInvestigations.value = [...oldInvestigations, COLONOSCOPY_EVRY_TEN_YEAR];
   }
 
