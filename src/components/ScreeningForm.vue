@@ -60,7 +60,7 @@
       <p class="text-black-50 mb-2">کەسی یەکەمی خێزان کە دایک، باوک، برا و خوشک دەگرێتەوە.</p>
       <div class="px-3">
         <template v-for="cancer in cancers">
-          <div class="form-check d-block d-lg-inline-block mx-2" v-if="checkCancerByGender(cancer.value)">
+          <div class="form-check d-block d-lg-inline-block mx-2">
             <label class="form-check-label" :for="'fmhx-'+cancer.value">
               {{ cancer.name }}
             </label>
@@ -120,7 +120,7 @@
 
 </template>
 <script setup>
-import {ref} from 'vue';
+import {ref, watch} from 'vue';
 import collect from 'collect.js';
 // Cities
 const HAWLER = 'hawler';
@@ -133,6 +133,8 @@ const LUNG = 'lung';
 const PROSTATE = 'prostate';
 const CERVICAL = 'cervical';
 const COLON = 'colon';
+const OVARIAN = 'ovarian';
+const PANCREATIC = 'pancreatic';
 const OTHERS = 'others';
 const ALL = 'all';
 
@@ -144,8 +146,8 @@ const MAMMOGRAPHY_ANNUALLY = 'mammography-annually';
 const CHEST_XRAY = 'c-xray';
 const PSA_OR_DRE = 'psa';
 const HPV = 'hpv-dna';
-const CYTOLOGY_EVERY_THREE_YEARS = 'citology-every-three-years';
-const CYTOLOGY_EVERY_FIVE_YEARS = 'citology-every-five-years';
+const PAP_SMEAR_EVERY_THREE_YEARS = 'pap-smear-every-three-years';
+const PAP_SMEAR_EVERY_FIVE_YEARS = 'pap-smear-every-five-years';
 const FIT = 'fit';
 const COLONOSCOPY_EVRY_TEN_YEAR = 'colonoscopy-every-ten-year';
 const COLONOSCOPY_EVRY_FIVE_YEAR = 'colonoscopy-every-five-year';
@@ -154,6 +156,7 @@ const NO_TESTS_REQUIRED = 'no-tests-required';
 //HOSPITALS
 const RIZGARY = 'rizgary';
 const BREAST_CENTER = 'breast-center';
+const MATERNITY_HOSPITAL = 'maternity-hospital';
 const SHAR = 'shar';
 const AZADI = 'azadi';
 
@@ -173,9 +176,11 @@ const cities = [
 ]
 const cancers = [
   {name: 'شێرپەنجەی مەمک', value: BREAST},
-  {name: 'شێرپەنجەی سنگ', value: LUNG},
+  {name: 'شێرپەنجەی سییەکان', value: LUNG},
   {name: 'شێرپەنجەی پڕۆستات', value: PROSTATE},
   {name: 'شێرپەنجەی ملی منداڵدان', value: CERVICAL},
+  {name: 'شێرپەنجەی هێلکەدان', value: OVARIAN},
+  {name: 'شێرپەنجەی پەنکریاس', value: PANCREATIC},
   {name: 'شێرپەنجەی کۆلۆن', value: COLON},
   {name: 'شێرپەنجەی تر', value: OTHERS},
 ]
@@ -192,18 +197,18 @@ const investigations = [
   },
   {name: 'پشکنینی HPV DNA هەموو ٥ تا ١٠ ساڵ جارێک بۆ شێرپەنجەی ملی منداڵدان.', value: HPV, type: CERVICAL},
   {
-    name: 'پشکنینی خانەزانی (Cytology) هەموو ٣ ساڵ جارێک بۆ شێرپەنجەی ملی منداڵدان.',
-    value: CYTOLOGY_EVERY_THREE_YEARS,
+    name: 'پشکنینی خانەزانی (Pap Smear) هەموو ٣ ساڵ جارێک بۆ شێرپەنجەی ملی منداڵدان.',
+    value: PAP_SMEAR_EVERY_THREE_YEARS,
     type: CERVICAL
   },
   {
-    name: 'پشکنینی خانەزانی (Cytology) هەموو ٥ ساڵ جارێک بۆ شێرپەنجەی ملی منداڵدان.',
-    value: CYTOLOGY_EVERY_FIVE_YEARS,
+    name: 'پشکنینی خانەزانی (Pap Smear) هەموو ٥ ساڵ جارێک بۆ شێرپەنجەی ملی منداڵدان.',
+    value: PAP_SMEAR_EVERY_FIVE_YEARS,
     type: CERVICAL
   },
   {name: 'پشکنینی پیسایی (FIT) هەموو ساڵ جارێک بۆ شێرپەنجەی کۆلۆن.', value: FIT, type: COLON},
   {
-    name: 'ئەنجامدانی نازوری کۆڵۆن هەموو ١٠ ساڵ جارێک بۆ شێرپەنجەی کۆلۆن.',
+    name: 'پشکنینی پیسایی (FIT) هەموو ساڵ جارێک یان ئەنجامدانی نازوری کۆڵۆن هەموو ١٠ ساڵ جارێک بۆ شێرپەنجەی کۆلۆن.',
     value: COLONOSCOPY_EVRY_TEN_YEAR,
     type: COLON
   },
@@ -215,10 +220,11 @@ const investigations = [
   {name: 'لە ئێستادا پێویستت بە هیچ پشکنینێکی پێشوەختە نییە بۆ شێرپەنجە باوەکان.', value: NO_TESTS_REQUIRED, type: ALL},
 ];
 const hospitals = [
-  {name: 'نەخۆشخانەی ڕزگاری لە هەولێر', value: RIZGARY},
-  {name: 'سەنتەری مەمک لە هەولێر', value: BREAST_CENTER},
-  {name: 'نەخۆشخانەی شار لە سلێمانی', value: SHAR},
-  {name: 'نەخۆشخانەی ئازادی لە دهۆک', value: AZADI},
+  {name: 'نەخۆشخانەی ڕزگاری فێرکاری لە هەولێر.', value: RIZGARY},
+  {name: 'سەنتەری مەمک لە هەولێر (بنکەی تەندروستی نازدار بامەڕنی).', value: BREAST_CENTER},
+  {name: 'نەخۆشخانەی ئافرەتان و لەدایک بوونی فێرکاری لە هەولێر.', value: MATERNITY_HOSPITAL},
+  {name: 'نەخۆشخانەی شار لە سلێمانی.', value: SHAR},
+  {name: 'نەخۆشخانەی ئازادی لە دهۆک.', value: AZADI},
 ];
 
 
@@ -234,10 +240,16 @@ const suggestedInvestigations = ref([]);
 const suggestedHospitals = ref([]);
 
 
+watch(gender, async (newGender, oldGender) => {
+  hx.value = []
+})
+
+
 function checkCancerByGender(cancer) {
   switch (cancer) {
     case BREAST:
     case CERVICAL:
+    case OVARIAN:
       return gender.value === FEMALE;
     case PROSTATE:
       return gender.value === MALE;
@@ -286,31 +298,48 @@ function checkBreastCancer() {
   if ((age.value >= 45 && age.value <= 69) && hx.value.length === 0 && fmhx.value.length === 0) {
     suggestedInvestigations.value = [...oldInvestigations, MAMMOGRAPHY_EVERY_TOW_YEAR];
   }
-  if (age.value >= 30 && (hx.value.length > 0 || fmhx.value.length > 0)) {
-    suggestedInvestigations.value = [...oldInvestigations, CLINICAL_EXAMINATION, MAMMOGRAPHY_ANNUALLY];
+
+  // high risk
+  const hasFamilyHxOfCancers = fmhx.value
+      .filter((item, index) => [BREAST, CERVICAL, OVARIAN].includes(item))
+      .length > 0;
+
+  if ((age.value >= 30 && age.value <= 40) && (hx.value.length > 0 || hasFamilyHxOfCancers)) {
+    suggestedInvestigations.value = [...oldInvestigations, CLINICAL_EXAMINATION];
+  }
+
+  if ((age.value >= 40 && age.value <= 69) && (hx.value.length > 0 || hasFamilyHxOfCancers)) {
+    suggestedInvestigations.value = [...oldInvestigations, MAMMOGRAPHY_ANNUALLY];
   }
 }
 
 function checkCervicalCancer() {
   const oldInvestigations = suggestedInvestigations.value;
   if (age.value >= 25 && age.value <= 49 && maritalStatus.value === MARRIED) {
-    suggestedInvestigations.value = [...oldInvestigations, HPV, CYTOLOGY_EVERY_THREE_YEARS];
+    suggestedInvestigations.value = [...oldInvestigations, PAP_SMEAR_EVERY_THREE_YEARS];
   }
   if (age.value >= 50 && age.value <= 69 && maritalStatus.value === MARRIED) {
-    suggestedInvestigations.value = [...oldInvestigations, HPV, CYTOLOGY_EVERY_FIVE_YEARS];
+    suggestedInvestigations.value = [...oldInvestigations, PAP_SMEAR_EVERY_FIVE_YEARS];
   }
 }
 
 function checkProstateCancer() {
   const oldInvestigations = suggestedInvestigations.value;
-  if ((age.value >= 55 && age.value <= 72) && (hx.value.length > 0 || fmhx.value.length > 0)) {
+  if ((age.value >= 45 && age.value <= 72) && (hx.value.length > 0 || fmhx.value.length > 0)) {
+    suggestedInvestigations.value = [...oldInvestigations, PSA_OR_DRE];
+  }
+
+  if ((age.value >= 55 && age.value <= 72) && (hx.value.length === 0 && fmhx.value.length === 0)) {
     suggestedInvestigations.value = [...oldInvestigations, PSA_OR_DRE];
   }
 }
 
 function checkLungCancer() {
   const oldInvestigations = suggestedInvestigations.value;
-  if ((age.value >= 55 && age.value <= 70) && smoking.value === SMOKER) {
+  const hasFamilyHxOfCancers = fmhx.value
+      .filter((item, index) => [LUNG].includes(item))
+      .length > 0;
+  if ((age.value >= 55 && age.value <= 70) && smoking.value === SMOKER && (hx.value.length > 0 || hasFamilyHxOfCancers)) {
     suggestedInvestigations.value = [...oldInvestigations, CHEST_XRAY];
   }
 }
@@ -318,9 +347,14 @@ function checkLungCancer() {
 function checkColonCancer() {
   const oldInvestigations = suggestedInvestigations.value;
   if ((age.value >= 45 && age.value <= 75) && hx.value.length === 0 && fmhx.value.length === 0) {
-    suggestedInvestigations.value = [...oldInvestigations, COLONOSCOPY_EVRY_TEN_YEAR, FIT];
+    suggestedInvestigations.value = [...oldInvestigations, COLONOSCOPY_EVRY_TEN_YEAR];
   }
-  if (age.value >= 45 && (hx.value.length > 0 || fmhx.value.length > 0)) {
+
+  const hasFamilyHxOfCancers = fmhx.value
+      .filter((item, index) => [COLON, PROSTATE, PANCREATIC].includes(item))
+      .length > 0;
+
+  if (age.value >= 45 && (hx.value.length > 0 || hasFamilyHxOfCancers)) {
     suggestedInvestigations.value = [...oldInvestigations, COLONOSCOPY_EVRY_FIVE_YEAR];
   }
 }
@@ -354,6 +388,17 @@ function setHawlerHospitals() {
 
   if (hasBreastTests) {
     suggestedHospitals.value = [...suggestedHospitals.value, BREAST_CENTER];
+  }
+
+  const hasCervicalTests = suggestedInvestigations.value
+      .filter((item) => [
+            PAP_SMEAR_EVERY_THREE_YEARS,
+            PAP_SMEAR_EVERY_FIVE_YEARS,
+          ].includes(item)
+      ).length > 0;
+
+  if (hasCervicalTests) {
+    suggestedHospitals.value = [...suggestedHospitals.value, MATERNITY_HOSPITAL]
   }
 }
 </script>
