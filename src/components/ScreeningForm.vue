@@ -356,7 +356,7 @@ function checkColonCancer() {
       .filter((item, index) => [COLON, PROSTATE, PANCREATIC].includes(item))
       .length > 0;
 
-  if (age.value >= 45 && (hx.value.length > 0 || hasFamilyHxOfCancers)) {
+  if ((age.value >= 45 && age.value <= 75) && (hx.value.length > 0 || hasFamilyHxOfCancers)) {
     suggestedInvestigations.value = [...oldInvestigations, COLONOSCOPY_EVRY_FIVE_YEAR];
   }
 }
