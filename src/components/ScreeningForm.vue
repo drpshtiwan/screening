@@ -126,6 +126,13 @@ import collect from 'collect.js';
 const HAWLER = 'hawler';
 const SULAYMANI = 'sulaymani';
 const DUHOK = 'duhok';
+const HELEBJE = 'helebje';
+const GARMYAN = 'garmyan';
+const RAPAREEN = 'rapareen';
+const SORAN = 'soran';
+const KOYA = 'koya';
+const ZAKHO = 'zakho';
+
 
 // Cancers
 const BREAST = 'breast';
@@ -158,7 +165,21 @@ const RIZGARY = 'rizgary';
 const BREAST_CENTER = 'breast-center';
 const MATERNITY_HOSPITAL = 'maternity-hospital';
 const SHAR = 'shar';
+const SULAYMANI_MATERNITY = 'sulaymani-maternity';
+const HELEBJE_GENERAL = 'helebjey-general';
+const HELEBJE_MATERNITY = 'helebjey-maternity';
+const KALAR_GENERAL = 'kalar-general';
+const KIFRY_GENERAL = 'kifry-general';
+const SHERAY_NAQEB_MATERNITY = 'sheray-naqeb-maternity';
+const RANYA_GENERAL = 'ranya-general';
+const RANYA_MATERNITY = 'ranya-maternity';
+const SORAN_ASHTY_GENERAL = 'soran-ashty-general';
+const SORAN_MATERNITY = 'soran-maternity';
+const KOYA_GENERAL = 'koya-general';
 const AZADI = 'azadi';
+const DUHOK_MATERNITY = 'duhok-maternity';
+const ZAKHO_GENERAL = 'zakho-general';
+const ZAKHO_MATERNITY = 'zakho-maternity';
 
 //options
 const MALE = 'male';
@@ -172,7 +193,12 @@ const cities = [
   {name: 'هەولێر', value: HAWLER},
   {name: 'سلێمانی', value: SULAYMANI},
   {name: 'دهۆک', value: DUHOK},
-  {name: 'هەڵەبجە', value: SULAYMANI},
+  {name: 'هەڵەبجە', value: HELEBJE},
+  {name: 'گەرمیان', value: GARMYAN},
+  {name: 'راپەڕین', value: RAPAREEN},
+  {name: 'سۆران', value: SORAN},
+  {name: 'کۆیە', value: KOYA},
+  {name: 'زاخۆ', value: ZAKHO},
 ]
 const cancers = [
   {name: 'شێرپەنجەی مەمک', value: BREAST},
@@ -224,7 +250,21 @@ const hospitals = [
   {name: 'سەنتەری مەمک لە هەولێر (بنکەی تەندروستی نازدار بامەڕنی).', value: BREAST_CENTER},
   {name: 'نەخۆشخانەی ئافرەتان و لەدایک بوونی فێرکاری لە هەولێر.', value: MATERNITY_HOSPITAL},
   {name: 'نەخۆشخانەی شار لە سلێمانی.', value: SHAR},
+  {name: 'نەخۆشخانەی منداڵبوونی سلێمانی.', value: SULAYMANI_MATERNITY},
+  {name: 'نەخۆشخانەی هەڵەبجەی شەهید.', value: HELEBJE_GENERAL},
+  {name: 'نەخۆشخانەی ئافرەتان و لەدایکبوونی هەڵەبجە.', value: HELEBJE_MATERNITY},
+  {name: 'نەخۆشخانەی گشتی کەلار.', value: KALAR_GENERAL},
+  {name: 'نەخۆشخانەی شەهید خالد گەرمیانی ــ کفری.', value: KIFRY_GENERAL},
+  {name: 'نەخۆشخانەی شەهید شێرەی نەقیب بۆ ژنان و مناڵبوون لە گەرمیان.', value: SHERAY_NAQEB_MATERNITY},
+  {name: 'نەخۆشخانەی رانیە.', value: RANYA_GENERAL},
+  {name: 'نەخۆشخانەی لەدایکبوونی رانیە.', value: RANYA_MATERNITY},
+  {name: 'نەخۆشخانەی ئاشتی لە سۆران.', value: SORAN_ASHTY_GENERAL},
+  {name: 'نەخۆشخانەی منداڵان و لەدایکبوونی سۆران.', value: SORAN_MATERNITY},
+  {name: 'نەخۆشخانەی شەهید د. خالید لە کۆیە.', value: KOYA_GENERAL},
   {name: 'نەخۆشخانەی ئازادی لە دهۆک.', value: AZADI},
+  {name: 'نەخۆشخانەی ئافرەتان و لەدایکبوون لە دهۆک.', value: DUHOK_MATERNITY},
+  {name: 'نەخۆشخانەی زاخۆ.', value: ZAKHO_GENERAL},
+  {name: 'نەخۆشخانەی ئافرەتان - زاخۆ.', value: ZAKHO_MATERNITY},
 ];
 
 
@@ -363,16 +403,66 @@ function checkColonCancer() {
 
 
 function setSuggestedHospitals() {
+
   switch (city.value) {
     case HAWLER:
       setHawlerHospitals()
       break;
     case SULAYMANI:
       suggestedHospitals.value = [SHAR];
+      if (hasCervicalTests()) {
+        suggestedHospitals.value = [...suggestedHospitals.value, SULAYMANI_MATERNITY]
+      }
+
       break;
+
+    case HELEBJE:
+      suggestedHospitals.value = [HELEBJE_GENERAL];
+      if (hasCervicalTests()) {
+        suggestedHospitals.value = [...suggestedHospitals.value, HELEBJE_MATERNITY]
+      }
+
+      break;
+    case GARMYAN:
+      suggestedHospitals.value = [KALAR_GENERAL, KIFRY_GENERAL];
+      if (hasCervicalTests()) {
+        suggestedHospitals.value = [...suggestedHospitals.value, SHERAY_NAQEB_MATERNITY]
+      }
+
+      break;
+
+    case RAPAREEN:
+      suggestedHospitals.value = [RANYA_GENERAL];
+      if (hasCervicalTests()) {
+        suggestedHospitals.value = [...suggestedHospitals.value, RANYA_MATERNITY]
+      }
+
+      break;
+    case SORAN:
+      suggestedHospitals.value = [SORAN_ASHTY_GENERAL];
+      if (hasCervicalTests()) {
+        suggestedHospitals.value = [...suggestedHospitals.value, SORAN_MATERNITY]
+      }
+
+      break;
+    case KOYA:
+      suggestedHospitals.value = [KOYA_GENERAL];
+
+      break;
+
     case DUHOK:
       suggestedHospitals.value = [AZADI];
+      if (hasCervicalTests()) {
+        suggestedHospitals.value = [...suggestedHospitals.value, DUHOK_MATERNITY]
+      }
       break;
+    case ZAKHO:
+      suggestedHospitals.value = [ZAKHO_GENERAL];
+      if (hasCervicalTests()) {
+        suggestedHospitals.value = [...suggestedHospitals.value, ZAKHO_MATERNITY]
+      }
+      break;
+
   }
 }
 
@@ -392,15 +482,18 @@ function setHawlerHospitals() {
     suggestedHospitals.value = [...suggestedHospitals.value, BREAST_CENTER];
   }
 
-  const hasCervicalTests = suggestedInvestigations.value
+  if (hasCervicalTests()) {
+    suggestedHospitals.value = [...suggestedHospitals.value, MATERNITY_HOSPITAL]
+  }
+}
+
+
+function hasCervicalTests() {
+  return suggestedInvestigations.value
       .filter((item) => [
             PAP_SMEAR_EVERY_THREE_YEARS,
             PAP_SMEAR_EVERY_FIVE_YEARS,
           ].includes(item)
       ).length > 0;
-
-  if (hasCervicalTests) {
-    suggestedHospitals.value = [...suggestedHospitals.value, MATERNITY_HOSPITAL]
-  }
 }
 </script>
